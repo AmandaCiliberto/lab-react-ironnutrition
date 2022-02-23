@@ -1,5 +1,5 @@
 import './App.css';
-import { useState } from 'react';
+import { useImperativeHandle, useState } from 'react';
 import foods from './foods.json';
 import { v4 as randomId } from 'uuid';
 import FoodBox from './components/FoodBox';
@@ -8,7 +8,7 @@ import Search from './components/Search';
 
 function App() {
   const [foodData, setFoodData] = useState(foods);
-  const [filteredFoods, setFilteredFoods] = useState(foodData);
+  const [filteredFoods, setFilteredFoods] = useState(foods);
 
   const addNewFood = (newFood) => {
     const updatedFoodsData = [...foodData, newFood];
@@ -34,6 +34,15 @@ function App() {
     setFilteredFoods(filteredFood);
   };
 
+  const deleteFood = (food) => {
+   let foodCopy = [...filteredFoods];
+
+   const deleteFood = foodCopy.filter((item) => {
+     return item.name !== food.name;
+   })
+   setFilteredFoods(deleteFood);
+  }
+
   return (
     <div className={'App'}>
       <div>
@@ -46,7 +55,13 @@ function App() {
       </div>
       <div>
         {filteredFoods.map((item) => {
-          return <FoodBox key={item.name} food={item} />;
+          return (
+            <FoodBox
+              key={Math.random()}
+              food={item}
+              deleteBtn={deleteFood}
+            />
+          );
         })}
       </div>
     </div>
